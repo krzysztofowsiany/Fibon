@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Fibon.Api.Repository;
 using Fibon.Messages.Commands;
@@ -20,6 +21,7 @@ namespace Fibon.Api.Controllers
 
         [HttpGet("{number}")]
         public IActionResult Get(int number){
+            
             int? calculatedValue = _repository.Get(number);
             if (calculatedValue.HasValue){
                 return Content(calculatedValue.ToString());
@@ -31,7 +33,7 @@ namespace Fibon.Api.Controllers
         [HttpPost("{number}")]
         public async Task<IActionResult> Post(int number){
             int? calculatedValue = _repository.Get(number);
-            if (calculatedValue.HasValue){
+            if (!calculatedValue.HasValue){
                  await _busClient.PublishAsync(new CalculateValueCommand(number));
             }
 

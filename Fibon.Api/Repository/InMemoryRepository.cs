@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Fibon.Api.Repository
@@ -7,6 +8,8 @@ namespace Fibon.Api.Repository
         private  readonly Dictionary<int, int> _storage = new Dictionary<int, int>();
         public void Add(int number, int result)
         {
+            Console.WriteLine(number.ToString());
+             Console.WriteLine(result.ToString());
             _storage[number] = result;
         }
 

@@ -1,0 +1,30 @@
+using System;
+using System.Threading.Tasks;
+using Fibon.Api.Repository;
+using Fibon.Messages.Events;
+using RawRabbit;
+
+namespace Fibon.Api.Handler
+{
+    public class ValueCalculatedEventHandler : IEventHandler<ValueCalculatedEvent>
+    {
+        private IRepository _repository;
+
+        public ValueCalculatedEventHandler(IRepository repository){
+            _repository = repository;
+            
+        }
+        
+        public Task HandleAsync(ValueCalculatedEvent @event)
+        {
+            Console.WriteLine("ValueCalculatedEvent");
+
+            Console.WriteLine(@event.Number.ToString());
+             Console.WriteLine(@event.Value.ToString());
+
+            _repository.Add(@event.Number, @event.Value);
+
+            return Task.CompletedTask;
+        }
+    }
+}

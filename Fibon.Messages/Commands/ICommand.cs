@@ -13,7 +13,7 @@ namespace Fibon.Messages.Commands
 
     public class CalculateValueCommand: ICommand
     {
-        public int Number { get; private set; }
+        public int Number { get; set; }
         public CalculateValueCommand(){
 
         }
