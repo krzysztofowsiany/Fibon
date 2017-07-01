@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fibon.Api.Framework;
+using Fibon.Api.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +34,8 @@ namespace Fibon.Api
             // Add framework services.
             services.AddMvc();
             services.Configure<RabbitMqOptions>(Configuration.GetSection("rabbitmq"));
+
+            services.AddSingleton<IRepository>(_=> new InMemoryRepository());
             ConfigureRabbitMq(services);
         }
 
