@@ -1,29 +1,32 @@
-using System;
 using System.Threading.Tasks;
+using Fibon.Api.Framework;
 using Fibon.Api.Repository;
 using Fibon.Messages.Commands;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using RawRabbit;
 
 namespace Fibon.Api.Controllers
 {
     [Route("[controller]")]
-    public class FibonacciController:Controller
+    public class FibonacciController : Controller
     {
-        private IBusClient _busClient;
-        private IRepository _repository;
+        private readonly IBusClient _busClient;
+        
+        private readonly IRepository _repository;
 
-        public FibonacciController(IBusClient busClient,  IRepository repository)
+        public FibonacciController(IBusClient busClient, IRepository repository)
         {
             _busClient = busClient;
             _repository = repository;
         }
 
         [HttpGet("{number}")]
-        public IActionResult Get(int number){
-            
+        public IActionResult Get(int number)
+        {
             int? calculatedValue = _repository.Get(number);
-            if (calculatedValue.HasValue){
+            if (calculatedValue.HasValue)
+            {
                 return Content(calculatedValue.ToString());
             }
 
@@ -31,13 +34,15 @@ namespace Fibon.Api.Controllers
         }
 
         [HttpPost("{number}")]
-        public async Task<IActionResult> Post(int number){
+        public async Task<IActionResult> Post(int number)
+        {
             int? calculatedValue = _repository.Get(number);
-            if (!calculatedValue.HasValue){
-                 await _busClient.PublishAsync(new CalculateValueCommand(number));
+            if (!calculatedValue.HasValue)
+            {
+                await _busClient.PublishAsync(new CalculateValueCommand(number));
             }
 
             return Accepted($"fibonacci/{number}", null);
-        }
+        }        
     }
 }

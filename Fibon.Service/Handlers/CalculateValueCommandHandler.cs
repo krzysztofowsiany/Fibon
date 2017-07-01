@@ -1,5 +1,4 @@
-using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Fibon.Messages.Commands;
 using Fibon.Messages.Events;
 using RawRabbit;
@@ -8,29 +7,32 @@ namespace Fibon.Service.Handlers
 {
     public class CalculateValueCommandHandler : ICommandHandler<CalculateValueCommand>
     {
-        private IBusClient _busClient;
+        private readonly IBusClient _busClient;
 
         public CalculateValueCommandHandler(IBusClient busClient)
         {
             _busClient = busClient;
         }
-        private static int Fib(int n){
-            switch(n){
-                case 0: return 0;
-                case 1: return 0;
-                default:return Fib(n-2) + Fib(n -1);
-            }
-        }
 
         public async Task HandleAsync(CalculateValueCommand command)
         {
-              Console.WriteLine("CalculateValueCommand");
-            var result = Fib(command.Number);
+            int result = Fib(command.Number);
 
-             Console.WriteLine(command.Number.ToString());
-             Console.WriteLine(result.ToString());
-
-            await  _busClient.PublishAsync(new ValueCalculatedEvent(command.Number, result));
+            await _busClient.PublishAsync(new ValueCalculatedEvent(command.Number, result));
         }
+
+        private static int Fib(int n)
+        {
+            switch (n)
+            {
+                case 0:
+                    return 0;
+                case 1:
+                    return 1;
+                default:
+                    return Fib(n - 2) + Fib(n - 1);
+            }
+        }
+
     }
 }

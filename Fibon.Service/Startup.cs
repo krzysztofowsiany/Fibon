@@ -33,8 +33,8 @@ namespace Fibon.Service
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();            
-            ConfigureRabbitMq(services);            
+            services.AddMvc();
+            ConfigureRabbitMq(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,24 +47,25 @@ namespace Fibon.Service
             ConfigureRabbitMqSubscriptions(app);
         }
 
-
         private void ConfigureRabbitMqSubscriptions(IApplicationBuilder app)
         {
-           var client = app.ApplicationServices.GetService<IBusClient>();
-           var handler = app.ApplicationServices.GetService<ICommandHandler<CalculateValueCommand>>();
-           client.SubscribeAsync<CalculateValueCommand>(async (msg, context) =>{
-               await handler.HandleAsync(msg);
-           });
+            var client = app.ApplicationServices.GetService<IBusClient>();
+            var handler = app.ApplicationServices.GetService<ICommandHandler<CalculateValueCommand>>();
+            client.SubscribeAsync<CalculateValueCommand>(async (msg, context) =>
+            {
+                await handler.HandleAsync(msg);
+            });
         }
 
-        private void ConfigureRabbitMq(IServiceCollection service){
+        private void ConfigureRabbitMq(IServiceCollection services)
+        {
             var options = new RabbitMqOptions();
             var section = Configuration.GetSection("rabbitmq");
             section.Bind(options);
 
             var client = BusClientFactory.CreateDefault(options);
-            service.AddSingleton<IBusClient>(_=>client);
-            service.AddScoped<ICommandHandler<CalculateValueCommand>, CalculateValueCommandHandler>();
+            services.AddSingleton<IBusClient>(_ => client);
+            services.AddScoped<ICommandHandler<CalculateValueCommand>, CalculateValueCommandHandler>();
         }
     }
 }

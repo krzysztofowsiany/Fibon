@@ -2,8 +2,7 @@ using RawRabbit.Configuration;
 
 namespace Fibon.Api.Framework
 {
-    public class RabbitMqOptions:RawRabbitConfiguration
+    public class RabbitMqOptions : RawRabbitConfiguration
     {
-        
     }
 }

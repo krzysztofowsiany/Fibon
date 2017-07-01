@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Fibon.Api.Controllers
+namespace Fibon.Service.Controllers
 {
-    public class HomeController: Controller
+    public class HomeController : Controller
     {
         [HttpGet("")]
-        public IActionResult Get() 
-        => Content("Hello form Fibon SERVICE!");
+        public IActionResult Get()
+        => Content("Hello from Fibon Service!");
     }
 }

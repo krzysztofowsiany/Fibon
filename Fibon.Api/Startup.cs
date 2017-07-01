@@ -37,10 +37,10 @@ namespace Fibon.Api
             // Add framework services.
             services.AddMvc();
             services.Configure<RabbitMqOptions>(Configuration.GetSection("rabbitmq"));
-
-            services.AddSingleton<IRepository>(_=> new InMemoryRepository());
+            services.AddSingleton<IRepository>(_ => new InMemoryRepository());
             ConfigureRabbitMq(services);
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -52,24 +52,25 @@ namespace Fibon.Api
             ConfigureRabbitMqSubscriptions(app);
         }
 
-
         private void ConfigureRabbitMqSubscriptions(IApplicationBuilder app)
         {
-           var client = app.ApplicationServices.GetService<IBusClient>();
-           var handler = app.ApplicationServices.GetService<IEventHandler<ValueCalculatedEvent>>();
-           client.SubscribeAsync<ValueCalculatedEvent>(async (msg, context) =>{
-               await handler.HandleAsync(msg);
-           });
+            var client = app.ApplicationServices.GetService<IBusClient>();
+            var handler = app.ApplicationServices.GetService<IEventHandler<ValueCalculatedEvent>>();
+            client.SubscribeAsync<ValueCalculatedEvent>(async (msg, context) =>
+            {
+                await handler.HandleAsync(msg);
+            });
         }
 
-        private void ConfigureRabbitMq(IServiceCollection service){
+        private void ConfigureRabbitMq(IServiceCollection services)
+        {
             var options = new RabbitMqOptions();
             var section = Configuration.GetSection("rabbitmq");
             section.Bind(options);
 
             var client = BusClientFactory.CreateDefault(options);
-            service.AddSingleton<IBusClient>(_=>client);
-            service.AddScoped<IEventHandler<ValueCalculatedEvent>, ValueCalculatedEventHandler>();
+            services.AddSingleton<IBusClient>(_ => client);
+            services.AddScoped<IEventHandler<ValueCalculatedEvent>, ValueCalculatedEventHandler>();
         }
     }
 }

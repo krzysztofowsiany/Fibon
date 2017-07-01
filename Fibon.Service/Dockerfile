@@ -1,9 +1,9 @@
-FROM microsoft/dotnet:runtime
+﻿FROM microsoft/dotnet:runtime
 
 WORKDIR /dotnetapp
 
-COPY ./Bin/Docker .
+COPY ./bin/Docker .
 
-ENV ASPNETCORE_ENVIRONMENT Docker
+ENV ASPNETCORE_ENVIRONMENT docker
 
 ENTRYPOINT ["dotnet", "Fibon.Service.dll"]

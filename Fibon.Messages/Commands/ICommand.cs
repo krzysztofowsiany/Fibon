@@ -1,21 +1,22 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Fibon.Messages.Commands
 {
     public interface ICommand
     {
-         
     }
 
-    public interface ICommandHandler<in T> where T: ICommand{
+    public interface ICommandHandler<in T> where T : ICommand
+    {
         Task HandleAsync(T command);
     }
 
-    public class CalculateValueCommand: ICommand
+    public class CalculateValueCommand : ICommand
     {
-        public int Number { get; set; }
-        public CalculateValueCommand(){
+        public int Number { get; private set; }
 
+        protected CalculateValueCommand()
+        {
         }
 
         public CalculateValueCommand(int number)
